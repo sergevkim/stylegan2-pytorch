@@ -1,4 +1,4 @@
-﻿# Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
+﻿# Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
 #
 # NVIDIA CORPORATION and its licensors retain all intellectual property
 # and proprietary rights in and to this software, related documentation
@@ -75,10 +75,8 @@ class Logger(object):
     def __exit__(self, exc_type: Any, exc_value: Any, traceback: Any) -> None:
         self.close()
 
-    def write(self, text: Union[str, bytes]) -> None:
+    def write(self, text: str) -> None:
         """Write text to stdout (and a file) and optionally flush."""
-        if isinstance(text, bytes):
-            text = text.decode()
         if len(text) == 0: # workaround for a bug in VSCode debugger: sys.stdout.write(''); sys.stdout.flush() => crash
             return
 
@@ -109,7 +107,6 @@ class Logger(object):
 
         if self.file is not None:
             self.file.close()
-            self.file = None
 
 
 # Cache directories
@@ -450,8 +447,6 @@ def open_url(url: str, cache_dir: str = None, num_attempts: int = 10, verbose: b
                     if verbose:
                         print(" done")
                     break
-            except KeyboardInterrupt:
-                raise
             except:
                 if not attempts_left:
                     if verbose:
